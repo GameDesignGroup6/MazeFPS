@@ -2,21 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-/**
- * Creates a grid of specified dimensions and generates a procedural maze using a
- * modified form of Prim's Algorithm.
- * @author Timothy Sesler
- * @author tds45
- * @date 4 February 2014
- * 
- * Adapted from work provided online by Austin Takechi 
- * Contact: MinoruTono@Gmail.com
- */ 
 public class GridScript : MonoBehaviour {
 	
 	public Transform CellPrefab;
 	public Vector3 Size;
 	public Transform[,] Grid;
+	public Transform MachineGunPrefab;
+	public Transform PistolPrefab;
+	public Transform LaserGunPrefab;
 	
 	// Use this for initialization
 	void Start () {
@@ -43,10 +36,6 @@ public class GridScript : MonoBehaviour {
 				Grid[x,z] = newCell;
 			}
 		}
-		// Centers the camera on the maze.
-		// Feel free to adjust this as needed.
-		//Camera.main.transform.position = Grid[(int)(Size.x / 2f),(int)(Size.z / 2f)].position + Vector3.up * 20f;
-		//Camera.main.orthographicSize = Mathf.Max(Size.x * 0.75f, Size.z * 0.7f);
 	}
 
 
@@ -87,7 +76,6 @@ public class GridScript : MonoBehaviour {
 	
 	// Sorts the weights of adjacent cells.
 	// Check the link for more info on custom comparators and sorting.
-	// http://msdn.microsoft.com/en-us/library/0e743hdt.aspx
 	int SortByLowestWeight (Transform inputA, Transform inputB) {
 		int a = inputA.GetComponent<CellScript>().Weight;
 		int b = inputB.GetComponent<CellScript>().Weight;
@@ -170,9 +158,6 @@ public class GridScript : MonoBehaviour {
 			
 			// The maze is complete.
 			if (isEmpty) { 
-				//Debug.Log("Generation completed in " + Time.timeSinceLevelLoad + " seconds."); 
-				//CancelInvoke("FindNext");
-				//PathCells[PathCells.Count - 1].renderer.material.color = Color.red;
 				
 				foreach (Transform cell in Grid) {
 					// Removes displayed weight
@@ -183,7 +168,6 @@ public class GridScript : MonoBehaviour {
 						//cell.renderer.material.color = Color.black;
 						cell.position = cell.position + Vector3.up;
 					}
-					//createChests();	
 				}
 				return;
 			}
@@ -211,8 +195,10 @@ public class GridScript : MonoBehaviour {
 		// generate special squares
 		if(isDeadEnd == 0) {
 			int chance = Random.Range(0,10);
-			if (chance < 6) next.renderer.material.color = Color.blue;
-			if (chance >= 8) next.renderer.material.color = Color.yellow;
+			if (chance < 6) {CreateMonsterSpawn(next);}
+			if (chance >= 8) { 
+				CreateWeaponSpawn(next);
+			}
 		}
 
 	}
@@ -226,6 +212,26 @@ public class GridScript : MonoBehaviour {
 		FindExit ();
 	}
 
+	void CreateWeaponSpawn(Transform next){
+		Transform newItem;
+		int whichWeapon = Random.Range (0, 10);
+		if (whichWeapon > 5) {
+			newItem = (Transform)Instantiate (PistolPrefab, new Vector3 (next.localPosition.x, 1, next.localPosition.z), Quaternion.identity);
+			newItem.name = "Pistol";
+		}
+		if (whichWeapon < 5) {
+			newItem = (Transform)Instantiate (MachineGunPrefab, new Vector3 (next.localPosition.x, 1, next.localPosition.z), Quaternion.identity);
+			newItem.name = "MachineGun";
+		}
+		if (whichWeapon == 5) {
+			newItem = (Transform)Instantiate (LaserGunPrefab, new Vector3 (next.localPosition.x, 1, next.localPosition.z), Quaternion.identity);
+			newItem.name = "LaserGun";
+		}
+	}
+
+	void CreateMonsterSpawn(Transform next){
+		next.renderer.material.color = Color.blue;
+	}
 
 	// Called once per frame.
 	void Update() {
