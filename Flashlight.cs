@@ -1,15 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-<<<<<<< HEAD
-public class Flashlight : MonoBehaviour {
-=======
-
 //[RequireComponent(typeof(Light))]
 [RequireComponent(typeof(Rigidbody))]
 public class Flashlight : MonoBehaviour {
 
->>>>>>> 538689cf11ba6d16b24e6fd902fe27572f21f8c6
 	public Sprite[] frames;
 
 	public int maxBattery = 1000;
@@ -23,10 +18,8 @@ public class Flashlight : MonoBehaviour {
 
 	public float throwVelocity = 2f;
 	public Transform GunPoint;
-<<<<<<< HEAD
-=======
+
 	public Light otherLight;
->>>>>>> 538689cf11ba6d16b24e6fd902fe27572f21f8c6
 	
 	public bool lockPos = false;
 	public bool autoLock = true;
@@ -45,11 +38,8 @@ public class Flashlight : MonoBehaviour {
 		if(switchedOn&&batteryRemaining>0){
 			batteryRemaining--;
 		}
-<<<<<<< HEAD
-		Debug.Log (batteryRemaining);
-=======
 //		Debug.Log (batteryRemaining);
->>>>>>> 538689cf11ba6d16b24e6fd902fe27572f21f8c6
+//		Debug.Log (batteryRemaining);
 		if(batteryRemaining==0)switchedOn = false;
 
 		float batPercent = (float)batteryRemaining/(float)maxBattery;
@@ -63,15 +53,10 @@ public class Flashlight : MonoBehaviour {
 	void LateUpdate () {
 		if(switchedOn){
 			GetComponentInChildren<Light>().enabled = true;
-<<<<<<< HEAD
-		}else{
-			GetComponentInChildren<Light>().enabled = false;
-=======
-			if(otherLight!=null&&!thrown)otherLight.enabled = true;
+				if(otherLight!=null&&!thrown)otherLight.enabled = true;
 		}else{
 			GetComponentInChildren<Light>().enabled = false;
 			if(otherLight!=null&&!thrown)otherLight.enabled = false;
->>>>>>> 538689cf11ba6d16b24e6fd902fe27572f21f8c6
 		}
 
 		if(!thrown){
@@ -125,10 +110,7 @@ public class Flashlight : MonoBehaviour {
 	}
 
 	public void ThrowFlashlight(){
-<<<<<<< HEAD
-=======
 		otherLight.enabled = false;
->>>>>>> 538689cf11ba6d16b24e6fd902fe27572f21f8c6
 		rigidbody.isKinematic = false;
 		Vector3 forward = transform.forward;
 		collider.enabled = true;
