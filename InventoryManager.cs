@@ -22,17 +22,17 @@ public class InventoryManager : MonoBehaviour {
 	}
 
 	public static bool AddToInventory (GameObject item) {
-		if (item.name == "Flashlight") {
+		if (item.tag == "Flashlight") {
 			++numFlashlights;
 			monoBehaviour.StartCoroutine(ShowMessage("Picked up flashlight"));
 			return true;
 		}
-		else if (item.name == "Pistol") {
+		else if (item.tag == "Pistol") {
 			numPistolAmmo += numAmmo;
 			monoBehaviour.StartCoroutine(ShowMessage("Picked up pistol ammo"));
 			return true;
 		}
-		else if (item.name == "Machine Gun") {
+		else if (item.tag == "Machine Gun") {
 			if (haveMachineGun) {
 				numMachineGunAmmo += numAmmo;
 				monoBehaviour.StartCoroutine(ShowMessage("Picked up machine gun ammo"));
@@ -44,7 +44,7 @@ public class InventoryManager : MonoBehaviour {
 			}
 			return true;
 		}
-		else if (item.name == "Laser Gun") {
+		else if (item.tag == "Laser Gun") {
 			if (haveLaserGun) {
 				numLaserGunAmmo += numAmmo;
 				monoBehaviour.StartCoroutine(ShowMessage("Picked up laser gun ammo"));
