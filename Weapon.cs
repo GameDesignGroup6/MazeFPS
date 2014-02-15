@@ -12,6 +12,10 @@ using System.Collections;
  **/ 
 public abstract class Weapon : MonoBehaviour {
 	public Transform GunPoint;
+<<<<<<< HEAD
+=======
+	public Transform muzzle;
+>>>>>>> 538689cf11ba6d16b24e6fd902fe27572f21f8c6
 
 	public bool lockPos = true;
 
