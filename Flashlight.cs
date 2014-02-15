@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+//[RequireComponent(typeof(Light))]
+[RequireComponent(typeof(Rigidbody))]
 public class Flashlight : MonoBehaviour {
+
 	public Sprite[] frames;
 
 	public int maxBattery = 1000;
@@ -15,6 +19,7 @@ public class Flashlight : MonoBehaviour {
 
 	public float throwVelocity = 2f;
 	public Transform GunPoint;
+	public Light otherLight;
 	
 	public bool lockPos = false;
 	public bool autoLock = true;
@@ -33,7 +38,7 @@ public class Flashlight : MonoBehaviour {
 		if(switchedOn&&batteryRemaining>0){
 			batteryRemaining--;
 		}
-		Debug.Log (batteryRemaining);
+//		Debug.Log (batteryRemaining);
 		if(batteryRemaining==0)switchedOn = false;
 
 		float batPercent = (float)batteryRemaining/(float)maxBattery;
@@ -47,8 +52,10 @@ public class Flashlight : MonoBehaviour {
 	void LateUpdate () {
 		if(switchedOn){
 			GetComponentInChildren<Light>().enabled = true;
+			if(otherLight!=null&&!thrown)otherLight.enabled = true;
 		}else{
 			GetComponentInChildren<Light>().enabled = false;
+			if(otherLight!=null&&!thrown)otherLight.enabled = false;
 		}
 
 		if(!thrown){
@@ -102,6 +109,7 @@ public class Flashlight : MonoBehaviour {
 	}
 
 	public void ThrowFlashlight(){
+		otherLight.enabled = false;
 		rigidbody.isKinematic = false;
 		Vector3 forward = transform.forward;
 		collider.enabled = true;
