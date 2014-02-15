@@ -39,6 +39,7 @@ public class InventoryManager : MonoBehaviour {
 			}
 			else {
 				haveMachineGun = true;
+				numMachineGunAmmo += numAmmo;
 				monoBehaviour.StartCoroutine(ShowMessage("Picked up machine gun"));
 			}
 			return true;

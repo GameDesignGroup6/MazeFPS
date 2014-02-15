@@ -2,7 +2,7 @@
 
 public class PauseMenuManager : MonoBehaviour {
 
-	public GUIText inventoryText, pausedText, restartText, unpauseText, inventoryList, itemNotification;
+	public GUIText inventoryText, pausedText, restartText, unpauseText, inventoryList, itemNotification, quitText;
 
 	public int numFlashlights = 1;
 	public int numPistolAmmo = 30;
@@ -30,6 +30,7 @@ public class PauseMenuManager : MonoBehaviour {
 		unpauseText.enabled = false;
 		inventoryList.enabled = false;
 		itemNotification.enabled = false;
+		quitText.enabled = false;
 		mouseMove.enabled = true;
 	}
 
@@ -41,6 +42,7 @@ public class PauseMenuManager : MonoBehaviour {
 			pausedText.enabled = true;
 			restartText.enabled = true;
 			unpauseText.enabled = true;
+			quitText.enabled = true;
 			mouseMove.enabled = false;
 		}
 
@@ -51,6 +53,7 @@ public class PauseMenuManager : MonoBehaviour {
 			pausedText.enabled = false;
 			restartText.enabled = false;
 			unpauseText.enabled = false;
+			quitText.enabled = false;
 			mouseMove.enabled = true;
 		}
 
@@ -64,9 +67,14 @@ public class PauseMenuManager : MonoBehaviour {
 			pausedText.enabled = false;
 			restartText.enabled = false;
 			unpauseText.enabled = true;
+			quitText.enabled = false;
 			mouseMove.enabled = false;
 			InventoryManager.DisplayInventory (inventoryList);
 			inventoryList.enabled = true;
+		}
+
+		if (Input.GetKey ("q") && pausedText.enabled == true) {
+			Application.Quit();
 		}
 	}
 }
