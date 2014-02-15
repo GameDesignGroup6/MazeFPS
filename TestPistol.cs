@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class TestPistol : Weapon {
-	Animator ani;
+	private Animator ani;
 	private int ammoRemaining;
 	private bool firing = false;
 	private const float RECOIL = 1.0f;
@@ -27,14 +27,19 @@ public class TestPistol : Weapon {
 	void Start () {
 		ani = GetComponent<Animator>() as Animator;
 		if(ani==null)ani = GetComponentInChildren<Animator>() as Animator;
+		if(InventoryManager.numPistolAmmo<maxAmmo){
+			AmmoRemaining = InventoryManager.numPistolAmmo;
+			InventoryManager.numPistolAmmo = 0;
+		}else{
+			AmmoRemaining = maxAmmo;
+			InventoryManager.numPistolAmmo-=maxAmmo;
+		}		
 		ani.SetBool("Fire", false);
 		ani.SetBool("Reload",false);
 		idleState = Animator.StringToHash("Base Layer.Idle");
 		fireState = Animator.StringToHash("Base Layer.Fire");
 		reloadState = Animator.StringToHash("Base Layer.Reload");
 		emptyState = Animator.StringToHash("Base Layer.OutOfAmmo");
-
-		AmmoRemaining = maxAmmo;
 	}
 	
 	// Update is called once per frame
@@ -64,18 +69,18 @@ public class TestPistol : Weapon {
 			ani.SetBool("Fire",false);
 			firing = false;
 		}
-		if((cur==emptyState||cur==idleState)&&Input.GetButtonDown("Reload")&&ammoRemaining!=maxAmmo){
-			InventoryManager.numPistolAmmo+=ammoRemaining;
+		if(InventoryManager.numPistolAmmo!=0&&(cur==emptyState||cur==idleState)&&Input.GetButtonDown("Reload")&&AmmoRemaining!=maxAmmo){
+			InventoryManager.numPistolAmmo+=AmmoRemaining;
 			if(InventoryManager.numPistolAmmo<maxAmmo){
-				ammoRemaining = InventoryManager.numPistolAmmo;
+				AmmoRemaining = InventoryManager.numPistolAmmo;
 				InventoryManager.numPistolAmmo=0;
 			}else{
 				InventoryManager.numPistolAmmo-=maxAmmo;
-				ammoRemaining = maxAmmo;
+				AmmoRemaining = maxAmmo;
 			}
 			ani.SetBool("Reload",true);
 		}
-		if(Input.GetButtonDown("Fire1")&&cur==idleState){
+		if(Input.GetButtonDown("Fire1")&&cur==idleState&&AmmoRemaining>0){
 			firing = true;
 			ani.SetBool("Fire",true);
 		}
@@ -84,6 +89,7 @@ public class TestPistol : Weapon {
 	public override void Fire ()
 	{
 //		if(ani.IsInTransition(0))return;
+		if(AmmoRemaining<=0)return;
 		int cur = ani.GetCurrentAnimatorStateInfo(0).nameHash;
 		if(cur==fireState||cur==emptyState||cur==reloadState)return;
 		GameObject created = Instantiate(bulletPrefab,muzzle.position,muzzle.rotation) as GameObject;
@@ -92,7 +98,6 @@ public class TestPistol : Weapon {
 		AmmoRemaining--;
 		firing = true;
 		ani.SetBool("Fire",true);
-		//Debug.Log("FIRE");
 		//do recoil
 		Vector3 curRot = transform.localEulerAngles;
 		curRot.x-=Random.Range(5f,10f)*RECOIL;
@@ -106,5 +111,10 @@ public class TestPistol : Weapon {
 	public override void UpdateCallback ()
 	{
 		//throw new System.NotImplementedException ();
+	}
+
+	public override void PutAway ()
+	{
+		InventoryManager.numPistolAmmo+=AmmoRemaining;
 	}
 }
