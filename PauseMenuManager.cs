@@ -10,7 +10,7 @@ public class PauseMenuManager : MonoBehaviour {
 	public int numLaserGunAmmo = 0;
 	public int numAmmo = 30;
 
-	public Vector3 startPosition = new Vector3(0f, 1.08f, 0f);
+//	public Vector3 startPosition = new Vector3(0f, 1.08f, 0f);
 
 	void Start () {
 		InventoryManager.numFlashlights = numFlashlights;
@@ -20,7 +20,7 @@ public class PauseMenuManager : MonoBehaviour {
 		InventoryManager.numAmmo = numAmmo;
 		InventoryManager.itemNotification = itemNotification;
 		Time.timeScale = 1.0f;
-		transform.position = startPosition;
+//		transform.position = startPosition;
 		InventoryManager.ClearInventory ();
 		inventoryText.enabled = false;
 		pausedText.enabled = false;
