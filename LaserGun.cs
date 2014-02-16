@@ -36,4 +36,9 @@ public class LaserGun : Weapon {
 		}
 		
 	}
+	public override void PutAway ()
+	{
+//		throw new System.NotImplementedException ();
+	}
+
 }

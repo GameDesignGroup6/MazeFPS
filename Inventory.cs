@@ -60,6 +60,7 @@ public class Inventory : MonoBehaviour {
 
 	public void switchToWeapon(int num){
 		Debug.Log("Switch to "+num);
+		if(curWeapon!=null)curWeapon.GetComponent<Weapon>().PutAway();
 		GameObject toDestroy = curWeapon;
 		DestroyImmediate(toDestroy);
 		curWeapon = null;

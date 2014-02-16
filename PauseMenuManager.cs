@@ -10,8 +10,6 @@ public class PauseMenuManager : MonoBehaviour {
 	public int numLaserGunAmmo = 0;
 	public int numAmmo = 30;
 
-	public MonoBehaviour mouseMove;
-
 	public Vector3 startPosition = new Vector3(0f, 1.08f, 0f);
 
 	void Start () {
@@ -31,7 +29,8 @@ public class PauseMenuManager : MonoBehaviour {
 		inventoryList.enabled = false;
 		itemNotification.enabled = false;
 		quitText.enabled = false;
-		mouseMove.enabled = true;
+		MouseLook[] looks = GetComponentsInChildren<MouseLook>();
+		foreach(MouseLook l in looks)l.enabled = true;
 	}
 
 	void Update () {
@@ -43,7 +42,8 @@ public class PauseMenuManager : MonoBehaviour {
 			restartText.enabled = true;
 			unpauseText.enabled = true;
 			quitText.enabled = true;
-			mouseMove.enabled = false;
+			MouseLook[] looks = GetComponentsInChildren<MouseLook>();
+			foreach(MouseLook l in looks)l.enabled = false;
 		}
 
 		if (Input.GetKey ("return")) {
@@ -54,7 +54,8 @@ public class PauseMenuManager : MonoBehaviour {
 			restartText.enabled = false;
 			unpauseText.enabled = false;
 			quitText.enabled = false;
-			mouseMove.enabled = true;
+			MouseLook[] looks = GetComponentsInChildren<MouseLook>();
+			foreach(MouseLook l in looks)l.enabled = true;
 		}
 
 		if (Input.GetKey ("r") && pausedText.enabled == true) {
@@ -68,7 +69,8 @@ public class PauseMenuManager : MonoBehaviour {
 			restartText.enabled = false;
 			unpauseText.enabled = true;
 			quitText.enabled = false;
-			mouseMove.enabled = false;
+			MouseLook[] looks = GetComponentsInChildren<MouseLook>();
+			foreach(MouseLook l in looks)l.enabled = false;
 			InventoryManager.DisplayInventory (inventoryList);
 			inventoryList.enabled = true;
 		}
