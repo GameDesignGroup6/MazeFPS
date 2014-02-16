@@ -1,0 +1,8 @@
+public class RocketEngine : MonoBehaviour {
+	void Update () {
+		transform.Translate (transform.forward * Time.deltaTime, Space.World);
+	}
+	void OnCollisionEnter(){
+		Destroy (gameObject);
+	}
+}
