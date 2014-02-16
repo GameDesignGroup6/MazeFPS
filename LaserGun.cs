@@ -2,9 +2,11 @@
 using System.Collections;
 
 [RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(AudioSource))]
 public class LaserGun : Weapon {
 	//	public Transform muzzle;
 	private LineRenderer line;
+	public AudioClip fireSound;
 	private int beamTime = 0;
 	public int maxBeamTime = 10;
 	
@@ -26,6 +28,7 @@ public class LaserGun : Weapon {
 	
 	override public void Fire(){
 		if(beamTime>0)return;
+		GetComponent<AudioSource>().PlayOneShot(fireSound);
 		Vector3 fwd = muzzle.TransformDirection(Vector3.forward);
 		RaycastHit hit;
 		if(Physics.Raycast(muzzle.position,fwd,out hit)){

@@ -10,6 +10,10 @@ public class TestPistol : Weapon {
 //	public Transform muzzle;
 	public GameObject bulletPrefab;
 
+	public AudioClip[] fireSounds,clickSounds;
+
+	private AudioSource audioSource;
+
 	private const float MUZZLE_VELOCITY = 251.0f;
 	private int AmmoRemaining{
 		get{
@@ -17,7 +21,7 @@ public class TestPistol : Weapon {
 		}
 		set{
 			ammoRemaining = value;
-			ani.SetInteger("Ammo",value);//I love C#!
+			ani.SetInteger("Ammo",value);
 		}
 	}
 	public int maxAmmo = 8;
@@ -25,6 +29,7 @@ public class TestPistol : Weapon {
 
 	// Use this for initialization
 	void Start () {
+		audioSource = GetComponentInChildren<AudioSource>();
 		ani = GetComponent<Animator>() as Animator;
 		if(ani==null)ani = GetComponentInChildren<Animator>() as Animator;
 		if(InventoryManager.numPistolAmmo<maxAmmo){
@@ -89,7 +94,10 @@ public class TestPistol : Weapon {
 	public override void Fire ()
 	{
 //		if(ani.IsInTransition(0))return;
-		if(AmmoRemaining<=0)return;
+		if(AmmoRemaining<=0){
+			playOne (clickSounds);
+			return;
+		}
 		int cur = ani.GetCurrentAnimatorStateInfo(0).nameHash;
 		if(cur==fireState||cur==emptyState||cur==reloadState)return;
 		GameObject created = Instantiate(bulletPrefab,muzzle.position,muzzle.rotation) as GameObject;
@@ -98,6 +106,7 @@ public class TestPistol : Weapon {
 		AmmoRemaining--;
 		firing = true;
 		ani.SetBool("Fire",true);
+		playOne(fireSounds);
 		//do recoil
 		Vector3 curRot = transform.localEulerAngles;
 		curRot.x-=Random.Range(5f,10f)*RECOIL;
@@ -115,6 +124,12 @@ public class TestPistol : Weapon {
 
 	public override void PutAway ()
 	{
+		audioSource.Stop();
 		InventoryManager.numPistolAmmo+=AmmoRemaining;
+	}
+
+	private void playOne(AudioClip[] choices){
+		int chosen = Random.Range (0,choices.Length-1);
+		audioSource.PlayOneShot(choices[chosen]);
 	}
 }

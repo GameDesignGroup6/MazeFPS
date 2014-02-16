@@ -13,8 +13,6 @@ public class Inventory : MonoBehaviour {
 
 	public Light flashlightAlt;
 
-	public int flashlights{get; set;}
-
 	private static Inventory instance;
 	// Use this for initialization
 	void Start () {
@@ -34,7 +32,7 @@ public class Inventory : MonoBehaviour {
 			}
 		}
 		//not an else so that it can happen in the same frame
-		if(equipedFlashlight==null&&flashlights>0){
+		if(equipedFlashlight==null&&InventoryManager.numFlashlights>0){
 			GameObject o = Instantiate(flashlightPrefab,transform.TransformPoint(Vector3.zero),transform.rotation) as GameObject;
 			equipedFlashlight = o;
 			Flashlight f = o.GetComponent<Flashlight>();
@@ -42,10 +40,10 @@ public class Inventory : MonoBehaviour {
 			f.autoLock = true;
 			f.lockPos = false;
 			f.otherLight = flashlightAlt;
-			flashlights--;
+			InventoryManager.numFlashlights--;
 		}
 		if(Input.GetKeyDown(KeyCode.F4)){
-			flashlights++;
+			InventoryManager.numFlashlights++;
 		}
 		for(int i = 0; i<weapons.Length;i++){
 			if(Input.GetKeyDown((i+1).ToString())){

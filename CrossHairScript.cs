@@ -5,7 +5,7 @@ public class CrossHairScript : MonoBehaviour {
 	private static CrossHairScript instance;
 	private Transform firePoint;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		instance = this;
 	}
 
