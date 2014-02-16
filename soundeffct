@@ -1,0 +1,58 @@
+using UnityEngine;
+using System.Collections;
+[RequireComponent(typeof(CharacterController),typeof(AudioSource),typeof(AudioListener)]
+
+public class audio : MonoBehaviour {
+	public AudioClip footstep;
+	public AudioClip fire;
+	public AudioClip jump;
+	public AudioClip land;
+	public AudioClip reload;
+	public float footdelay;
+	public float shootdelay;
+	private float delay;
+	private bool allow=true;
+	private bool intheAyer = false;
+	CharacterController controler;
+
+	void Start () {
+		controler = GetComponent<CharacterController> ();
+	}
+	
+	void Update () {
+				if (Input.GetMouseButton (0)) {
+								audio.clip = fire;
+			delay=shootdelay;
+			StartCoroutine (interval());
+
+				}
+				if ((Input.GetButton ("Horizontal") || Input.GetButton ("Vertical")) && controler.isGrounded) {
+						if (!(audio.clip == fire && audio.isPlaying)) {
+								audio.clip = footstep;
+				delay=footdelay;
+				StartCoroutine(interval ());
+						}
+				}
+				if (Input.GetButtonDown ("Jump") && controler.isGrounded && !(audio.clip == fire && audio.isPlaying)) {
+						audio.clip = jump;
+						audio.Play ();
+				}
+				if (!controler.isGrounded)
+						intheAyer = true;
+				if (intheAyer && controler.isGrounded) {
+			audio.PlayOneShot(land);
+			intheAyer=false;
+				}
+	//	if (input.getButton("Reload"))
+	//		audio.PlayOneShot(reload);
+		}
+
+	IEnumerator interval(){
+		if (allow) {
+			allow=false;
+						audio.Play ();
+						yield return new WaitForSeconds (delay);
+						allow = true;
+		}
+	}
+}
