@@ -1,0 +1,41 @@
+using UnityEngine;
+using System.Collections;
+
+public class shoot : MonoBehaviour {
+	public GameObject machineGunFireEffect;
+	public GameObject rocket;
+	public GameObject RocketFireEffct;
+	public float machineGunDelay;
+	private float machineGunCoolDown;
+
+
+	void Start () {
+		Screen.lockCursor = true;
+	}
+
+	void Update () {
+	/*	if (Input.GetMouseButtonUp (0)) {
+			Instantiate (rocket, transform.position, transform.rotation);
+			Ray ray = new Ray (this.transform.position, this.transform.forward);
+			RaycastHit hitInfo;
+			if (Physics.Raycast (ray, out hitInfo, 100f))
+				Instantiate (RocketFireEffct, hitInfo.point, Quaternion.identity);
+				}
+		 Rocket*/
+
+		machineGunCoolDown-=Time.deltaTime;
+		if (Input.GetMouseButton (0)&& machineGunCoolDown<=0){
+			machineGunCoolDown=machineGunDelay;
+			Ray ray = new Ray (this.transform.position, this.transform.forward);
+			RaycastHit hitInfo;
+			
+			if (Physics.Raycast (ray, out hitInfo, 100f))
+				Instantiate (machineGunFireEffect, hitInfo.point, Quaternion.identity);
+	}
+
+
+
+}
+
+
+}
