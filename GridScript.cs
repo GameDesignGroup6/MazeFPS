@@ -10,6 +10,7 @@ public class GridScript : MonoBehaviour {
 	public Transform MachineGunPrefab;
 	public Transform PistolPrefab;
 	public Transform LaserGunPrefab;
+	public Transform MonsterPrefab;
 	
 	// Use this for initialization
 	void Start () {
@@ -29,10 +30,10 @@ public class GridScript : MonoBehaviour {
 		for (int x = 0; x < Size.x; x++) {
 			for (int z = 0; z < Size.z; z++) {
 				Transform newCell;
-				newCell = (Transform)Instantiate(CellPrefab, new Vector3(x, 0, z), Quaternion.identity);
-				newCell.name = string.Format("({0},0,{1})", x, z);
+				newCell = (Transform)Instantiate(CellPrefab, new Vector3(4*x, 0, 4*z), Quaternion.identity);
+				newCell.name = string.Format("({0},0,{1})", 4*x, 4*z);
 				newCell.parent = transform;
-				newCell.GetComponent<CellScript>().Position = new Vector3(x, 0, z);
+				newCell.GetComponent<CellScript>().Position = new Vector3(4*x, 0, 4*z);
 				Grid[x,z] = newCell;
 			}
 		}
@@ -56,16 +57,16 @@ public class GridScript : MonoBehaviour {
 				cell = Grid[x,z];
 				CellScript cScript = cell.GetComponent<CellScript>();
 				
-				if (x - 1 >= 0) {
+				if (4*(x - 1) >= 0) {
 					cScript.Adjacents.Add(Grid[x - 1, z]);
 				}
-				if (x + 1 < Size.x) {
+				if (4*(x + 1) < 4*Size.x) {
 					cScript.Adjacents.Add(Grid[x + 1, z]);
 				}
-				if (z - 1 >= 0) {
+				if (4*(z - 1) >= 0) {
 					cScript.Adjacents.Add(Grid[x, z - 1]);
 				}
-				if (z + 1 < Size.z) {
+				if (4*(z + 1) < 4*Size.z) {
 					cScript.Adjacents.Add(Grid[x, z + 1]);
 				}
 				
@@ -166,7 +167,7 @@ public class GridScript : MonoBehaviour {
 					if (!PathCells.Contains(cell)) {
 						// HINT: Try something here to make the maze 3D
 						//cell.renderer.material.color = Color.black;
-						cell.position = cell.position + Vector3.up;
+						cell.position = cell.position + 4*(Vector3.up);
 					}
 				}
 				return;
@@ -189,7 +190,7 @@ public class GridScript : MonoBehaviour {
 		// check if the space is a dead end
 		int isDeadEnd = 1;
 		foreach(Transform cell in next.GetComponent<CellScript>().Adjacents){
-			if(cell.position.y == 1)continue;
+			if(cell.position.y == 4)continue;
 			isDeadEnd -= 1;
 		}
 		// generate special squares
@@ -216,24 +217,25 @@ public class GridScript : MonoBehaviour {
 		Transform newItem;
 		int whichWeapon = Random.Range (0, 10);
 		if (whichWeapon > 5) {
-			newItem = (Transform)Instantiate (PistolPrefab, new Vector3 (next.localPosition.x, 1, next.localPosition.z), Quaternion.identity);
+			newItem = (Transform)Instantiate (PistolPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
 			newItem.name = "Pistol";
 		}
 		if (whichWeapon < 5) {
-			newItem = (Transform)Instantiate (MachineGunPrefab, new Vector3 (next.localPosition.x, 1, next.localPosition.z), Quaternion.identity);
+			newItem = (Transform)Instantiate (MachineGunPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
 			newItem.name = "MachineGun";
 		}
 		if (whichWeapon == 5) {
-			newItem = (Transform)Instantiate (LaserGunPrefab, new Vector3 (next.localPosition.x, 1, next.localPosition.z), Quaternion.identity);
+			newItem = (Transform)Instantiate (LaserGunPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
 			newItem.name = "LaserGun";
 		}
 	}
 
 	void CreateMonsterSpawn(Transform next){
-		next.renderer.material.color = Color.blue;
+		Transform newMonster;
+		newMonster = (Transform)Instantiate (MonsterPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
+		newMonster.name = "Monster";
 	}
-
-	// Called once per frame.
+	
 	void Update() {
 		
 		// Pressing 'F1' will generate a new maze.
