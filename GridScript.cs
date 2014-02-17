@@ -11,6 +11,10 @@ public class GridScript : MonoBehaviour {
 	public Transform PistolPrefab;
 	public Transform LaserGunPrefab;
 	public Transform MonsterPrefab;
+	private Vector3 pVictory;
+	public Vector3 Victory{
+		get{return pVictory;}
+	}
 	
 	// Use this for initialization
 	void Start () {
@@ -20,6 +24,7 @@ public class GridScript : MonoBehaviour {
 		SetStart();
 		FindNext();
 		FindExit ();
+		pVictory=PathCells[PathCells.Count-1].position;
 	}
 	
 	// Creates the grid by instantiating provided cell prefabs.
@@ -244,6 +249,11 @@ public class GridScript : MonoBehaviour {
 		// Pressing 'F1' will generate a new maze.
 		if (Input.GetKeyDown(KeyCode.F1)) {
 			Application.LoadLevel(0);	
+		}
+	}
+	void CheckGridSize(){
+		if (VictoryScript.gridSize.x != 0 && VictoryScript.gridSize.z != 0){
+			Size= VictoryScript.gridSize;
 		}
 	}
 }

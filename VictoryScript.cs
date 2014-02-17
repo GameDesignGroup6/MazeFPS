@@ -32,8 +32,8 @@ public class VictoryScript:MonoBehaviour
 	 *Uses the static Vector3 var from GridScript to check the victory condition
 	 *Has leniency of .5f since it is hard for the character to be at the exact center of the victory square
 	 */
-	void Update(){
-		var playerObj = GameObject.Find ("First Person Controller");//assuming our player is called First Person Controller
+	void FixedUpdate(){
+		var playerObj = GameObject.Find ("Player");//assuming our player is called First Person Controller//its not
 		var playerPos = playerObj.transform.position;
 		//Debug.Log ("Player is at" + playerPos);
 		if (Mathf.Abs(playerPos.x-grid.Victory.x)<.5 && Mathf.Abs(playerPos.z-grid.Victory.z)<.5 && (grid.Victory.x!=0 || grid.Victory.z!=0)){
@@ -41,15 +41,17 @@ public class VictoryScript:MonoBehaviour
 			Victory();
 
 		}
-		StartCoroutine(CheckVic());
+		//why does everyone hate FixedUpdate?
+//		StartCoroutine(CheckVic());
 		
 	}
 	/**
 	 *Loads the scene for the next level
 	 */
 	void Victory(){
-		gridSize= new Vector3(grid.Size.x+10,0,grid.Size.z+10);
-		Application.LoadLevel(0);
+		Debug.Log ("VICTORY!!!");
+//		gridSize= new Vector3(grid.Size.x+10,0,grid.Size.z+10);
+//		Application.LoadLevel(0);
 	}
 	
 	/**
