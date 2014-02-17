@@ -38,8 +38,8 @@ public class GridScript : MonoBehaviour {
 			}
 		}
 	}
-
-
+	
+	
 	// Sets a random weight to each cell.
 	void SetRandomNumbers () {
 		foreach (Transform child in transform) {
@@ -121,6 +121,7 @@ public class GridScript : MonoBehaviour {
 		}
 		
 		Grid[0, 0].renderer.material.color = Color.green;
+		Grid [0, 0].parent = null;
 		AddToSet(Grid[0, 0]);
 	}
 	
@@ -182,9 +183,10 @@ public class GridScript : MonoBehaviour {
 		
 		// The 'next' transform's material color becomes white.
 		next.renderer.material.color = Color.white;
+
 		// We add this 'next' transform to the Set our function.
 		AddToSet(next);
-
+		
 		// Recursively call this function as soon as it finishes.
 		FindNext ();
 		// check if the space is a dead end
@@ -196,23 +198,24 @@ public class GridScript : MonoBehaviour {
 		// generate special squares
 		if(isDeadEnd == 0) {
 			int chance = Random.Range(0,10);
-			if (chance < 6) {CreateMonsterSpawn(next);}
+			if (chance < 4) {CreateMonsterSpawn(next);}
 			if (chance >= 8) { 
 				CreateWeaponSpawn(next);
 			}
 		}
-
+		
 	}
-
+	
 	void FindExit (){
 		int pos = (int)Random.Range(0, Size.x-1);
 		if (Grid[pos,(int)Size.z-1].position.y == 0f){
 			Grid[pos,(int)Size.z-1].renderer.material.color = Color.red;
+			Grid[pos,(int)Size.z-1].parent = null;
 			return;
 		}
 		FindExit ();
 	}
-
+	
 	void CreateWeaponSpawn(Transform next){
 		Transform newItem;
 		int whichWeapon = Random.Range (0, 10);
@@ -229,7 +232,7 @@ public class GridScript : MonoBehaviour {
 			newItem.name = "LaserGun";
 		}
 	}
-
+	
 	void CreateMonsterSpawn(Transform next){
 		Transform newMonster;
 		newMonster = (Transform)Instantiate (MonsterPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);

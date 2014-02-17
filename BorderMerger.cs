@@ -9,7 +9,7 @@ public class BorderMerger : MonoBehaviour {
 	}
 	
 	void MergeBorder(){
-		
+
 		MeshFilter[] meshFilters = transform.GetComponentsInChildren<MeshFilter>();
 		CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 		int i = 0;
@@ -20,10 +20,12 @@ public class BorderMerger : MonoBehaviour {
 			i++;
 		}
 		Transform mainWall = transform.GetChild (0);
-		mainWall.GetComponent<MeshFilter>().mesh = new Mesh();
+		Mesh OneTrueMesh = new Mesh ();
+		mainWall.GetComponent<MeshFilter>().mesh = OneTrueMesh;
 		mainWall.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
 		mainWall.gameObject.SetActive(true);
 		mainWall.position = new Vector3 (0, 0, 0);
 		mainWall.localScale = new Vector3 (1, 1, 1);
+		mainWall.gameObject.AddComponent (typeof(MeshCollider));
 	}
 }
