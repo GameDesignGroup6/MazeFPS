@@ -93,7 +93,8 @@ public abstract class Weapon : MonoBehaviour {
 	}
 	public void detatch(){
 		collider.enabled = true;
-		rigidbody.isKinematic = true;
+		rigidbody.isKinematic = false;
+		rigidbody.constraints = RigidbodyConstraints.None;
 		detatched = true;
 	}
 

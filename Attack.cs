@@ -13,6 +13,8 @@ public class Attack : MonoBehaviour {
 	private bool willChase;
 	public int enemyHealth = 5;
 	private Animator animator;
+
+	private static bool aiEnabled = true;
 	
 	void Start() {
 		//Gets the health variable from the player character's script
@@ -26,6 +28,9 @@ public class Attack : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
+		if(Input.GetKeyDown(KeyCode.F6))aiEnabled = false;
+		if(Input.GetKeyDown(KeyCode.F7))aiEnabled = true;
+		if(!aiEnabled)return;
 		//Determines whether the player character is in view (i.e. not behind a wall)
 		transform.LookAt(new Vector3(player.position.x, transform.position.y, 
 		                             player.position.z));

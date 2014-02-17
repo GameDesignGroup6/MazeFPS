@@ -28,18 +28,18 @@ public class InventoryManager : MonoBehaviour {
 			return true;
 		}
 		else if (item.tag == "Pistol") {
-			numPistolAmmo += numAmmo;
+			numPistolAmmo += 32;
 			monoBehaviour.StartCoroutine(ShowMessage("Picked up pistol ammo"));
 			return true;
 		}
 		else if (item.tag == "Machine Gun") {
 			if (haveMachineGun) {
-				numMachineGunAmmo += numAmmo;
+				numMachineGunAmmo += 32;
 				monoBehaviour.StartCoroutine(ShowMessage("Picked up machine gun ammo"));
 			}
 			else {
 				haveMachineGun = true;
-				numMachineGunAmmo += numAmmo;
+				numMachineGunAmmo += 48;
 				monoBehaviour.StartCoroutine(ShowMessage("Picked up machine gun"));
 			}
 			return true;
@@ -77,7 +77,7 @@ public class InventoryManager : MonoBehaviour {
 
 	public static void ClearInventory () {
 		numFlashlights = 1;
-		numPistolAmmo = 30;
+		numPistolAmmo = 48;
 		numMachineGunAmmo = 0;
 		numLaserGunAmmo = 0;
 		numAmmo = 30;
