@@ -6,7 +6,7 @@ public class Attack : MonoBehaviour {
 	public Transform player;
 	public float moveSpeed;
 	public bool takeDamage;
-	public Health healthScript;
+	public Player healthScript;
 	public float attackDamage;
 	public Ray ray;
 	public RaycastHit hit;
