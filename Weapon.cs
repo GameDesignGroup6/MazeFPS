@@ -10,6 +10,8 @@ using System.Collections;
  * 
  * 
  **/ 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
 public abstract class Weapon : MonoBehaviour {
 	public Transform GunPoint;
 	public Transform muzzle;
@@ -21,6 +23,8 @@ public abstract class Weapon : MonoBehaviour {
 
 	private Vector3 posVel;
 
+	private bool detatched = false;
+
 	private const float smoothPosTime = 0.1f;
 	private const float smoothRotTime = 0.1f;
 	private const float maxDegreesDelta = 20f;
@@ -29,11 +33,13 @@ public abstract class Weapon : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		rigidbody.isKinematic = true;
+		collider.enabled = false;
 	}
 	
 	// Update is called once per frame
 	void LateUpdate () {
+		if(detatched)return;
 		//first define our targets
 		Quaternion curRot = transform.rotation;
 		Quaternion targetRot = GunPoint.rotation;
@@ -84,6 +90,11 @@ public abstract class Weapon : MonoBehaviour {
 		RaycastHit hit;
 		Physics.Raycast(ray,out hit);
 		return hit.point;
+	}
+	public void detatch(){
+		collider.enabled = true;
+		rigidbody.isKinematic = true;
+		detatched = true;
 	}
 
 	public abstract void Fire();

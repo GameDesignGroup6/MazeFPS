@@ -2,69 +2,70 @@
 using System.Collections;
 
 public class Attack : MonoBehaviour {
-
-	public Transform player;
-	public float moveSpeed;
-	public bool takeDamage;
-	public Player healthScript;
-	public float attackDamage;
-	public Ray ray;
-	public RaycastHit hit;
-	public bool willChase;
-	public float enemyHealth;
-	public Animator animator;
-
+	
+	private Transform player;
+	public float moveSpeed = 0.04f;
+	private bool touchingPlayer;
+	private Player healthScript;
+	public int attackDamage = 1;
+	private Ray ray;
+	private RaycastHit hit;
+	private bool willChase;
+	public int enemyHealth = 5;
+	private Animator animator;
+	
 	void Start() {
 		//Gets the health variable from the player character's script
-		healthScript = player.GetComponent<Health>();
+		player = GameObject.Find("Player").transform;
+		healthScript = player.GetComponent<Player>();
+		
 		ray = new Ray (transform.position, player.position - transform.position);
 		animator = GetComponent<Animator>();
-		moveSpeed = 0.0004f;
-		attackDamage = 0.01f;
-		enemyHealth = 5f;
-		takeDamage = false;
+		touchingPlayer = false;
 		willChase = false;
 	}
-
-	void Update() {
+	
+	void FixedUpdate() {
 		//Determines whether the player character is in view (i.e. not behind a wall)
+		transform.LookAt(new Vector3(player.position.x, transform.position.y, 
+		                             player.position.z));
 		if (Physics.Linecast (transform.position, player.position, out hit)) {
-			if (hit.collider.gameObject.tag == "Player")
-				willChase = true;
-			else 
-				willChase = false;
+			willChase = hit.collider.gameObject.tag == "Player";
 		}
+		
 		//Damages the player if it collides with the player
-		if (takeDamage == true) {
+		if (touchingPlayer) {
 			healthScript.health = healthScript.health - attackDamage;
 		}
-		StartCoroutine (Move ());
+		//		StartCoroutine (Move ());
+		float distance = 0;
+		if(willChase && !touchingPlayer){
+			distance = Vector3.Distance(transform.position,new Vector3(player.position.x, transform.position.y, player.position.z));
+			transform.position = Vector3.MoveTowards(transform.position, new Vector3(player.position.x, transform.position.y, player.position.z), moveSpeed);
+		}
+		
 		//Determines if enemy is dead and destroys the object if so
 		if (enemyHealth <= 0)
 			Destroy (gameObject);
-		if (willChase && !takeDamage)
-			animator.SetBool("running", true);
-		else
-			animator.SetBool("running", false);
-	}
 
-	//Rotates the enemy towards the player and lerps to them if they are in sight
-	IEnumerator Move() {
-		while (willChase && !takeDamage) {
-			transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
-			transform.position = Vector3.Lerp(transform.position, new Vector3(player.position.x, transform.position.y, player.position.z), moveSpeed);
-			yield return 0;
+		animator.SetBool("running", distance>=moveSpeed);
+	}
+	
+
+	void OnCollisionEnter(Collision victim) {
+		if (victim.gameObject.tag == "Player"){
+			Debug.Log ("Hit player!");
+			touchingPlayer = true;
 		}
 	}
-
-	void OnTriggerEnter(Collider victim) {
-		if (victim.tag == "Player")
-			takeDamage = true;
+	
+	void OnCollisionExit(Collision victim) {
+		if (victim.gameObject.tag == "Player")
+			touchingPlayer = false;
 	}
-
-	void OnTriggerExit(Collider victim) {
-		if (victim.tag == "Player")
-			takeDamage = false;
+	
+	public void onHit(){
+		enemyHealth--;
 	}
-
+	
 }
