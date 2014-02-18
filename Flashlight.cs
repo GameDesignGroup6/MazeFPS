@@ -34,6 +34,15 @@ public class Flashlight : MonoBehaviour {
 	private const float maxDegreesDelta = 20f;
 	private const float maxDistDelta = 0.05f;
 
+	private AudioSource source;
+
+	public AudioClip switchOnSound,switchOffSound;
+
+	void Start(){
+		source = GetComponent<AudioSource>();
+		source.PlayOneShot(switchOnSound);
+	}
+
 	void FixedUpdate(){
 		if(switchedOn&&batteryRemaining>0){
 			batteryRemaining--;
@@ -51,7 +60,7 @@ public class Flashlight : MonoBehaviour {
 
 
 	void LateUpdate () {
-		if(switchedOn){
+		if(batteryRemaining>0){
 			GetComponentInChildren<Light>().enabled = true;
 				if(otherLight!=null&&!thrown)otherLight.enabled = true;
 		}else{
@@ -110,6 +119,9 @@ public class Flashlight : MonoBehaviour {
 	}
 
 	public void ThrowFlashlight(){
+		if(batteryRemaining<=0){
+			source.PlayOneShot(switchOffSound);
+		}
 		otherLight.enabled = false;
 		rigidbody.isKinematic = false;
 		Vector3 forward = transform.forward;

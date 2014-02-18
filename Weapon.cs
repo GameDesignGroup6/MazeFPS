@@ -96,6 +96,7 @@ public abstract class Weapon : MonoBehaviour {
 		rigidbody.isKinematic = false;
 		rigidbody.constraints = RigidbodyConstraints.None;
 		detatched = true;
+		rigidbody.AddForce(transform.forward.normalized);
 	}
 
 	public abstract void Fire();

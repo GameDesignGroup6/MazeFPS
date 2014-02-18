@@ -8,7 +8,7 @@ public class Attack : MonoBehaviour {
 	private bool touchingPlayer;
 	private Player healthScript;
 	public int attackDamage = 1;
-	private Ray ray;
+//	private Ray ray;
 	private RaycastHit hit;
 	private bool willChase;
 	public int enemyHealth = 5;
@@ -21,7 +21,7 @@ public class Attack : MonoBehaviour {
 		player = GameObject.Find("Player").transform;
 		healthScript = player.GetComponent<Player>();
 		
-		ray = new Ray (transform.position, player.position - transform.position);
+//		ray = new Ray (transform.position, player.position - transform.position);
 		animator = GetComponent<Animator>();
 		touchingPlayer = false;
 		willChase = false;
@@ -40,7 +40,7 @@ public class Attack : MonoBehaviour {
 		
 		//Damages the player if it collides with the player
 		if (touchingPlayer) {
-			healthScript.health = healthScript.health - attackDamage;
+			healthScript.hurt (attackDamage);
 		}
 		//		StartCoroutine (Move ());
 		float distance = 0;

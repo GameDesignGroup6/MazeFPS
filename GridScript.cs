@@ -12,6 +12,7 @@ public class GridScript : MonoBehaviour {
 	public Transform LaserGunPrefab;
 	public Transform MonsterPrefab;
 	public Transform FlashLightPrefab;
+	public Vector3 Victory;
 	
 	// Use this for initialization
 	void Start () {
@@ -21,6 +22,7 @@ public class GridScript : MonoBehaviour {
 		SetStart();
 		FindNext();
 		FindExit ();
+		Victory=PathCells[PathCells.Count-1].position;
 	}
 	
 	// Creates the grid by instantiating provided cell prefabs.

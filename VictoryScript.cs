@@ -21,8 +21,9 @@ using System.Collections;
 public class VictoryScript:MonoBehaviour
 {
 	public GridScript grid;//so that a gameObject with GridScript attached can be attached
-	public static Vector3 gridSize;
+	private GameObject playerObj;
 	void Start(){
+		playerObj = GameObject.Find ("Player");
 		//DontDestroyOnLoad(this);
 
 	}
@@ -33,10 +34,9 @@ public class VictoryScript:MonoBehaviour
 	 *Has leniency of .5f since it is hard for the character to be at the exact center of the victory square
 	 */
 	void FixedUpdate(){
-		var playerObj = GameObject.Find ("Player");//assuming our player is called First Person Controller//its not
 		var playerPos = playerObj.transform.position;
 		//Debug.Log ("Player is at" + playerPos);
-		if (Mathf.Abs(playerPos.x-grid.Victory.x)<.5 && Mathf.Abs(playerPos.z-grid.Victory.z)<.5 && (grid.Victory.x!=0 || grid.Victory.z!=0)){
+		if (Mathf.Abs(playerPos.x-grid.Victory.x)<1 && Mathf.Abs(playerPos.z-grid.Victory.z)<1 && (grid.Victory.x!=0 || grid.Victory.z!=0)){
 			Debug.Log("player reached the end");
 			Victory();
 
@@ -52,12 +52,5 @@ public class VictoryScript:MonoBehaviour
 		Debug.Log ("VICTORY!!!");
 //		gridSize= new Vector3(grid.Size.x+10,0,grid.Size.z+10);
 //		Application.LoadLevel(0);
-	}
-	
-	/**
-	 * waits 1 second before checking the victory condition again
-	 */
-	IEnumerator CheckVic(){
-		yield return new WaitForSeconds(1f);
 	}
 }
