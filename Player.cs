@@ -81,6 +81,7 @@ public class Player : MonoBehaviour {
 		//not an else so that it can happen in the same frame
 		if(equipedFlashlight==null&&InventoryManager.numFlashlights>0){
 			GameObject o = Instantiate(flashlightPrefab,transform.TransformPoint(Vector3.zero),transform.rotation) as GameObject;
+//			Physics.IgnoreCollision(o.collider,collider);
 			equipedFlashlight = o;
 			Flashlight f = o.GetComponent<Flashlight>();
 			f.GunPoint = flashlightPoint;

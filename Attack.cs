@@ -34,6 +34,7 @@ public class Attack : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.F6))aiEnabled = false;
 		if(Input.GetKeyDown(KeyCode.F7))aiEnabled = true;
 		if(!aiEnabled)return;
+//		if(enemyHealth<=2)animator.SetBool("gocrouch",true);
 		//Determines whether the player character is in view (i.e. not behind a wall)
 		transform.LookAt(new Vector3(player.position.x, transform.position.y, 
 		                             player.position.z));

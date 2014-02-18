@@ -123,15 +123,13 @@ public class Flashlight : MonoBehaviour {
 			source.PlayOneShot(switchOffSound);
 		}
 		otherLight.enabled = false;
-		rigidbody.isKinematic = false;
-		Vector3 forward = transform.forward;
 		collider.enabled = true;
-//		forward+= Random.onUnitSphere;
-		forward = Vector3.Lerp (forward,Random.onUnitSphere,0.25f);
-		forward*=throwVelocity;
-		rigidbody.AddTorque(Random.onUnitSphere*2);
-		rigidbody.AddForce(forward);
+		Physics.IgnoreCollision(Player.GetInstance().collider,collider);
 //		rigidbody.velocity = forward;
 		thrown = true;
+		rigidbody.isKinematic = false;
+		rigidbody.constraints = RigidbodyConstraints.None;
+		rigidbody.AddForce(transform.forward.normalized*2f);
+		rigidbody.AddTorque(Random.onUnitSphere*5);
 	}
 }

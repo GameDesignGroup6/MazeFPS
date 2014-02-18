@@ -18,6 +18,8 @@ public class InventoryManager : MonoBehaviour {
 	private static bool haveLaserGun = false;
 	
 	void Start() {
+//		Screen.lockCursor = true;
+		Screen.showCursor = false;
 		monoBehaviour = (MonoBehaviour)gameObject.GetComponent("MonoBehaviour");
 	}
 
@@ -28,14 +30,14 @@ public class InventoryManager : MonoBehaviour {
 			return true;
 		}
 		else if (item.tag == "Pistol") {
-			numPistolAmmo += 32;
-			monoBehaviour.StartCoroutine(ShowMessage("Picked up pistol ammo"));
+			numPistolAmmo += 16;
+			monoBehaviour.StartCoroutine(ShowMessage("Picked up 16 pistol ammo"));
 			return true;
 		}
 		else if (item.tag == "Machine Gun") {
 			if (haveMachineGun) {
 				numMachineGunAmmo += 32;
-				monoBehaviour.StartCoroutine(ShowMessage("Picked up machine gun ammo"));
+				monoBehaviour.StartCoroutine(ShowMessage("Picked up 32 machine gun ammo"));
 			}
 			else {
 				haveMachineGun = true;
@@ -46,13 +48,13 @@ public class InventoryManager : MonoBehaviour {
 		}
 		else if (item.tag == "Laser Gun") {
 			if (haveLaserGun) {
-				numLaserGunAmmo += numAmmo;
-				monoBehaviour.StartCoroutine(ShowMessage("Picked up laser gun ammo"));
+				numLaserGunAmmo += 10;
+				monoBehaviour.StartCoroutine(ShowMessage("Picked up 10 laser gun ammo"));
 			}
 			else {
 				haveLaserGun = true;
 				numLaserGunAmmo += numAmmo;
-				monoBehaviour.StartCoroutine(ShowMessage("Picked up laser gun"));
+				monoBehaviour.StartCoroutine(ShowMessage("Picked up laser gun, press 2 to switch"));
 			}
 			return true;
 		}

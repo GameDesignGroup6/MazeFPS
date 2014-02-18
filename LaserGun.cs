@@ -65,6 +65,7 @@ public class LaserGun : Weapon {
 		if(Physics.Raycast(muzzle.position,fwd,out hit)){
 			hit.collider.gameObject.SendMessage("onHit",SendMessageOptions.DontRequireReceiver);
 			lights = new GameObject[(int)(hit.distance/lineDensity)];
+			Debug.Log(lights.Length+" lights created on a "+hit.distance+" long line");
 			Vector3 delta = (hit.point-muzzle.position)/lights.Length;
 			for(int i = 0; i<lights.Length;i++){
 				lights[i] = Instantiate(lightPrefab,muzzle.position+(delta*i),Quaternion.identity) as GameObject;

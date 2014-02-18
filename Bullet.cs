@@ -9,6 +9,7 @@ public class Bullet : MonoBehaviour {
 	public float maxLife = 1.5f;
 	private Vector3 velocity;//251 m/s
 	private int segment = 1;
+	public GameObject bloodSplatPrefab;
 
 	public AudioClip[] hitEnemySounds,hitWallSounds;
 
@@ -41,6 +42,8 @@ public class Bullet : MonoBehaviour {
 		if(Physics.Linecast(oldPos,transform.position,out hit)){
 			hit.collider.gameObject.SendMessage("onHit",SendMessageOptions.DontRequireReceiver);
 			if(hit.collider.gameObject.tag == "Enemy"){
+				GameObject spawned = Instantiate(bloodSplatPrefab,hit.point,Quaternion.LookRotation(hit.normal)) as GameObject;
+				Destroy(spawned,5);
 				Debug.Log ("Hit enemy!");
 				playOneSound(hitEnemySounds);
 			}else{
