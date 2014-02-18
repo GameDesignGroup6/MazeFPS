@@ -13,6 +13,7 @@ public class Attack : MonoBehaviour {
 	private bool willChase;
 	public int enemyHealth = 5;
 	private Animator animator;
+	public GameObject ragdollPrefab;
 
 	private static bool aiEnabled = true;
 	
@@ -28,6 +29,8 @@ public class Attack : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
+
+
 		if(Input.GetKeyDown(KeyCode.F6))aiEnabled = false;
 		if(Input.GetKeyDown(KeyCode.F7))aiEnabled = true;
 		if(!aiEnabled)return;
@@ -50,8 +53,10 @@ public class Attack : MonoBehaviour {
 		}
 		
 		//Determines if enemy is dead and destroys the object if so
-		if (enemyHealth <= 0)
+		if (enemyHealth <= 0){
+			Destroy(Instantiate(ragdollPrefab,transform.position,transform.rotation),5);
 			Destroy (gameObject);
+		}
 
 		animator.SetBool("running", distance>=moveSpeed);
 	}

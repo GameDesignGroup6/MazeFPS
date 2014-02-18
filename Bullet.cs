@@ -10,18 +10,28 @@ public class Bullet : MonoBehaviour {
 	private Vector3 velocity;//251 m/s
 	private int segment = 1;
 
+	public AudioClip[] hitEnemySounds,hitWallSounds;
+
+	private AudioSource source;
+
 	public void setVelocity(Vector3 newVel){
 		velocity = newVel;
 	}
 	// Use this for initialization
 	void Start () {
 		line = GetComponent<LineRenderer>();
+		source = GetComponent<AudioSource>();
 		line.SetPosition(0,transform.position);
 		line.SetPosition(1,transform.position);
 		oldPos = transform.position;
 		Destroy (gameObject,maxLife);
 	}
-	
+
+	private void playOneSound(AudioClip[] list){
+		int chosen = Random.Range(0,list.Length-1);
+		source.PlayOneShot(list[chosen]);
+	}
+
 	// Update is called once per frame
 	void Update () {
 		lifeTime+=Time.deltaTime;
@@ -30,6 +40,13 @@ public class Bullet : MonoBehaviour {
 		transform.position+=velocity*Time.deltaTime;
 		if(Physics.Linecast(oldPos,transform.position,out hit)){
 			hit.collider.gameObject.SendMessage("onHit",SendMessageOptions.DontRequireReceiver);
+			if(hit.collider.gameObject.tag == "Enemy"){
+				Debug.Log ("Hit enemy!");
+				playOneSound(hitEnemySounds);
+			}else{
+				Debug.Log ("Hit wall!");
+				playOneSound(hitWallSounds);
+			}
 			Destroy(gameObject);
 		}
 		line.SetVertexCount(segment+1);

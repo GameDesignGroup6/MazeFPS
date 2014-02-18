@@ -74,7 +74,7 @@ public class TestPistol : Weapon {
 			ani.SetBool("Fire",false);
 			firing = false;
 		}
-		if(InventoryManager.numPistolAmmo!=0&&(cur==emptyState||cur==idleState)&&Input.GetButtonDown("Reload")&&AmmoRemaining!=maxAmmo){
+		if(InventoryManager.numPistolAmmo!=0&&(cur==emptyState||cur==idleState)&&Input.GetButtonDown("Reload")&&AmmoRemaining!=maxAmmo&&!Player.Dead){
 			InventoryManager.numPistolAmmo+=AmmoRemaining;
 			if(InventoryManager.numPistolAmmo<maxAmmo){
 				AmmoRemaining = InventoryManager.numPistolAmmo;
@@ -85,7 +85,7 @@ public class TestPistol : Weapon {
 			}
 			ani.SetBool("Reload",true);
 		}
-		if(Input.GetButtonDown("Fire1")&&cur==idleState&&AmmoRemaining>0){
+		if(Input.GetButtonDown("Fire1")&&cur==idleState&&AmmoRemaining>0&&!Player.Dead){
 			firing = true;
 			ani.SetBool("Fire",true);
 		}

@@ -18,6 +18,9 @@ public class Player : MonoBehaviour {
 	private static Player instance;
 
 	private bool dead = false;
+	public static bool Dead{
+		get{return instance.dead;}
+	}
 
 	private AudioSource source;
 
@@ -36,8 +39,7 @@ public class Player : MonoBehaviour {
 
 	public int maxInvulTime = 10;
 	private int invulTime;
-
-	public bool Dead{get{return dead;}}
+	
 	// Use this for initialization
 	void Start () {
 //		flashlights=0;
@@ -61,7 +63,7 @@ public class Player : MonoBehaviour {
 			hurt (0);
 		}
 		if(dead){
-			if(invulTime>0){
+			if(invulTime<=0){
 				if(Input.anyKeyDown){
 					Application.LoadLevel(0);
 				}
@@ -92,7 +94,7 @@ public class Player : MonoBehaviour {
 		}
 		for(int i = 0; i<weapons.Length;i++){
 			if(Input.GetKeyDown((i+1).ToString())){
-				switchToWeapon(i);
+				if(InventoryManager.weaponUnlocked(i))switchToWeapon(i);
 			}
 		}
 	}
@@ -143,6 +145,7 @@ public class Player : MonoBehaviour {
 		if(health<=0.0f && !dead){
 			invulTime = 150;
 			playOneSound(deathSounds);
+			head.GetComponent<MouseLook>().axes = MouseLook.RotationAxes.MouseXAndY;
 			dead = true;
 			equipedFlashlight.GetComponent<Flashlight>().ThrowFlashlight();
 			curWeapon.GetComponent<Weapon>().detatch();
@@ -151,6 +154,7 @@ public class Player : MonoBehaviour {
 			gameObject.transform.DetachChildren();
 			body.renderer.enabled = false;
 			collider.enabled = false;
+
 		}
 		Debug.Log (health);
 	}

@@ -35,6 +35,7 @@ public abstract class Weapon : MonoBehaviour {
 	void Start () {
 		rigidbody.isKinematic = true;
 		collider.enabled = false;
+		rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 	}
 	
 	// Update is called once per frame
@@ -80,7 +81,7 @@ public abstract class Weapon : MonoBehaviour {
 		//huh... "position" and "rotation" have the same number of letters...makes my code look nice!
 
 
-		if(Input.GetButtonDown("Fire1"))Fire();
+		if(Input.GetButtonDown("Fire1")&&!Player.Dead)Fire();
 		UpdateCallback();
 	}
 
@@ -97,6 +98,7 @@ public abstract class Weapon : MonoBehaviour {
 		rigidbody.constraints = RigidbodyConstraints.None;
 		detatched = true;
 		rigidbody.AddForce(transform.forward.normalized);
+		rigidbody.AddTorque(Random.onUnitSphere*5);
 	}
 
 	public abstract void Fire();

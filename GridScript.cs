@@ -13,16 +13,19 @@ public class GridScript : MonoBehaviour {
 	public Transform MonsterPrefab;
 	public Transform FlashLightPrefab;
 	public Vector3 Victory;
+	private int weaponsSpawned = 0;
 	
 	// Use this for initialization
 	void Start () {
+		Debug.Log ("Generating maze...");
 		CreateGrid();
 		SetRandomNumbers();
 		SetAdjacents();
 		SetStart();
 		FindNext();
 		FindExit ();
-		Victory=PathCells[PathCells.Count-1].position;
+//		Victory=PathCells[PathCells.Count-1].position;
+		Debug.Log (weaponsSpawned+" Weapons Spawned");
 	}
 	
 	// Creates the grid by instantiating provided cell prefabs.
@@ -172,6 +175,8 @@ public class GridScript : MonoBehaviour {
 						// HINT: Try something here to make the maze 3D
 						//cell.renderer.material.color = Color.black;
 						cell.position = cell.position + 4*(Vector3.up);
+					}else{
+						if(Random.Range (0,100)<=5)CreateWeaponSpawn(cell);
 					}
 				}
 				return;
@@ -202,8 +207,8 @@ public class GridScript : MonoBehaviour {
 		if(isDeadEnd == 0) {
 			int chance = Random.Range(0,10);
 			if (chance < 4) {CreateMonsterSpawn(next);}
-			if (chance >= 8) { 
-				CreateWeaponSpawn(next);
+			if (chance >= 4) { 
+				CreateWeaponSpawn(next);//we need more weapons
 			}
 		}
 		
@@ -213,6 +218,7 @@ public class GridScript : MonoBehaviour {
 		int pos = (int)Random.Range(0, Size.x-1);
 		if (Grid[pos,(int)Size.z-1].position.y == 0f){
 			Grid[pos,(int)Size.z-1].renderer.material.color = Color.red;
+			Victory = Grid[pos,(int)Size.z-1].position;
 			Grid[pos,(int)Size.z-1].parent = null;
 			return;
 		}
@@ -221,23 +227,24 @@ public class GridScript : MonoBehaviour {
 	
 	void CreateWeaponSpawn(Transform next){
 		Transform newItem;
-		int whichWeapon = Random.Range (0, 10);
-		if (whichWeapon > 5) {
+		weaponsSpawned++;
+		int c = Random.Range (0, 100);
+		if (isBetween(0,c,25)) {
 			newItem = (Transform)Instantiate (PistolPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
 			newItem.name = "Pistol";
-		}
-		if (whichWeapon < 9) {
-			newItem = (Transform)Instantiate (MachineGunPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
-			newItem.name = "MachineGun";
-		}
-		if (whichWeapon == 5) {
+//		}else if (isBetween(70,c,90)) {
+//			newItem = (Transform)Instantiate (MachineGunPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
+//			newItem.name = "MachineGun";
+		}else if (isBetween(25,c,65)) {
+			newItem = (Transform)Instantiate (FlashLightPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
+			newItem.name = "FlashLight";
+		}else{
 			newItem = (Transform)Instantiate (LaserGunPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
 			newItem.name = "LaserGun";
 		}
-		if (whichWeapon > 5 && whichWeapon < 9) {
-			newItem = (Transform)Instantiate (FlashLightPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
-			newItem.name = "FlashLight";
-		}
+	}
+	private bool isBetween(int min, int val, int max){
+		return (min<val&&max>val);
 	}
 	
 	void CreateMonsterSpawn(Transform next){

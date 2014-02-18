@@ -126,10 +126,12 @@ public class Flashlight : MonoBehaviour {
 		rigidbody.isKinematic = false;
 		Vector3 forward = transform.forward;
 		collider.enabled = true;
-		forward+= Random.onUnitSphere;
+//		forward+= Random.onUnitSphere;
+		forward = Vector3.Lerp (forward,Random.onUnitSphere,0.25f);
 		forward*=throwVelocity;
 		rigidbody.AddTorque(Random.onUnitSphere*2);
-		rigidbody.velocity = forward;
+		rigidbody.AddForce(forward);
+//		rigidbody.velocity = forward;
 		thrown = true;
 	}
 }

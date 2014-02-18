@@ -87,5 +87,13 @@ public class InventoryManager : MonoBehaviour {
 
 	}
 
+	public static bool weaponUnlocked(int id){
+		switch(id){
+		case 0:return true;
+		case 1:return haveLaserGun;
+		default:return false;
+		}
+	}
+
 
 }

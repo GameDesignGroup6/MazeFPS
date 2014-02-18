@@ -20,12 +20,30 @@ using System.Collections;
  */
 public class VictoryScript:MonoBehaviour
 {
+	public GUIText text;
+	private int maxFade = 150;
+	private int fade = 0;
+	public AnimationCurve fadeCurve;
+	public GameObject debugMarker;
+
+
 	public GridScript grid;//so that a gameObject with GridScript attached can be attached
 	private GameObject playerObj;
 	void Start(){
+		debugMarker.transform.position = new Vector3(grid.Victory.x,2f,grid.Victory.z);
+		say ("Level "+(Application.loadedLevel+1));
 		playerObj = GameObject.Find ("Player");
 		//DontDestroyOnLoad(this);
+	}
 
+	public void say(string message){
+		text.enabled = true;
+		text.text = message;
+		fade = maxFade;
+		float percent = ((float)fade)/((float)maxFade);
+		Color color = text.color;
+		color.a = fadeCurve.Evaluate(percent);
+		text.color = color;
 	}
 	
 	
@@ -34,6 +52,22 @@ public class VictoryScript:MonoBehaviour
 	 *Has leniency of .5f since it is hard for the character to be at the exact center of the victory square
 	 */
 	void FixedUpdate(){
+		if(fade>0){
+			fade--;
+			float percent = ((float)fade)/((float)maxFade);
+			Color color = text.color;
+			color.a = fadeCurve.Evaluate(percent);
+			text.color = color;
+		}else{
+			text.enabled = false;
+		}
+
+		if(Player.Dead){
+			say("Game Over");
+			return;
+		}
+
+
 		var playerPos = playerObj.transform.position;
 		//Debug.Log ("Player is at" + playerPos);
 		if (Mathf.Abs(playerPos.x-grid.Victory.x)<1 && Mathf.Abs(playerPos.z-grid.Victory.z)<1 && (grid.Victory.x!=0 || grid.Victory.z!=0)){
@@ -45,11 +79,23 @@ public class VictoryScript:MonoBehaviour
 //		StartCoroutine(CheckVic());
 		
 	}
+
+	void Update(){
+		if(Input.GetKeyDown(KeyCode.F11))
+			debugMarker.renderer.enabled = !debugMarker.renderer.enabled;
+//		if(Input.GetKeyDown (KeyCode.F12))
+//			debugMarker.renderer.enabled = false;
+	}
 	/**
 	 *Loads the scene for the next level
 	 */
 	void Victory(){
-		Debug.Log ("VICTORY!!!");
+		int nextLevel = Application.loadedLevel+1;
+		if(nextLevel==Application.levelCount){
+			say("You Win");
+			return;
+		}
+		Application.LoadLevel(nextLevel);
 //		gridSize= new Vector3(grid.Size.x+10,0,grid.Size.z+10);
 //		Application.LoadLevel(0);
 	}
