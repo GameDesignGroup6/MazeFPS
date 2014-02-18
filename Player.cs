@@ -6,7 +6,7 @@ public class Player : MonoBehaviour {
 	private GameObject equipedFlashlight;
 	public GameObject flashlightPrefab;
 
-	public int health;
+	public float health;
 
 	public Weapon[] weapons;
 	private GameObject curWeapon = null;
@@ -16,6 +16,10 @@ public class Player : MonoBehaviour {
 	public Light flashlightAlt;
 
 	private static Player instance;
+
+	private bool dead = false;
+
+	public bool Dead{get{return dead;}}
 	// Use this for initialization
 	void Start () {
 //		flashlights=0;
@@ -25,6 +29,7 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(dead)return;
 		//grab items off ground!?
 		if(equipedFlashlight!=null){
 			Flashlight f = equipedFlashlight.GetComponent<Flashlight>();
@@ -52,6 +57,16 @@ public class Player : MonoBehaviour {
 				switchToWeapon(i);
 			}
 		}
+		if(health<=0.0f && !dead){
+			dead = true;
+			equipedFlashlight.GetComponent<Flashlight>().ThrowFlashlight();
+			curWeapon.GetComponent<Weapon>().detatch();
+			gameObject.GetComponentInChildren<Rigidbody>().isKinematic = false;
+			gameObject.GetComponentInChildren<SphereCollider>().enabled = true;
+			gameObject.transform.DetachChildren();
+
+		}
+		Debug.Log (health);
 
 
 
@@ -59,7 +74,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void switchToWeapon(int num){
-		Debug.Log("Switch to "+num);
+//		Debug.Log("Switch to "+num);
 		if(curWeapon!=null)curWeapon.GetComponent<Weapon>().PutAway();
 		GameObject toDestroy = curWeapon;
 		DestroyImmediate(toDestroy);
