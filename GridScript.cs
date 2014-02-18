@@ -11,6 +11,7 @@ public class GridScript : MonoBehaviour {
 	public Transform PistolPrefab;
 	public Transform LaserGunPrefab;
 	public Transform MonsterPrefab;
+	public Transform FlashLightPrefab;
 	
 	// Use this for initialization
 	void Start () {
@@ -223,13 +224,17 @@ public class GridScript : MonoBehaviour {
 			newItem = (Transform)Instantiate (PistolPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
 			newItem.name = "Pistol";
 		}
-		if (whichWeapon < 5) {
+		if (whichWeapon < 9) {
 			newItem = (Transform)Instantiate (MachineGunPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
 			newItem.name = "MachineGun";
 		}
 		if (whichWeapon == 5) {
 			newItem = (Transform)Instantiate (LaserGunPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
 			newItem.name = "LaserGun";
+		}
+		if (whichWeapon > 5 && whichWeapon < 9) {
+			newItem = (Transform)Instantiate (FlashLightPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
+			newItem.name = "FlashLight";
 		}
 	}
 	
