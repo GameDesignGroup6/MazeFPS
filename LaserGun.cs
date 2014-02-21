@@ -25,7 +25,6 @@ public class LaserGun : Weapon {
 	
 	// Update is called once per frame
 	override public void UpdateCallback () {
-		if(Player.Dead)return;
 		if(Input.GetKeyDown (KeyCode.F3)){
 			InventoryManager.numLaserGunAmmo+=10;
 		}

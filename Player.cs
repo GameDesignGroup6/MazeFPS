@@ -148,7 +148,7 @@ public class Player : MonoBehaviour {
 			playOneSound(deathSounds);
 			head.GetComponent<MouseLook>().axes = MouseLook.RotationAxes.MouseXAndY;
 			dead = true;
-			equipedFlashlight.GetComponent<Flashlight>().ThrowFlashlight();
+			if(equipedFlashlight!=null)equipedFlashlight.GetComponent<Flashlight>().ThrowFlashlight();
 			curWeapon.GetComponent<Weapon>().detatch();
 			head.rigidbody.isKinematic = false;
 			head.collider.enabled = true;

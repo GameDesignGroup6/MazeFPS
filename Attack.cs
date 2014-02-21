@@ -18,6 +18,10 @@ public class Attack : MonoBehaviour {
 	private static bool aiEnabled = true;
 	
 	void Start() {
+
+
+
+
 		//Gets the health variable from the player character's script
 		player = GameObject.Find("Player").transform;
 		healthScript = player.GetComponent<Player>();
@@ -26,6 +30,11 @@ public class Attack : MonoBehaviour {
 		animator = GetComponent<Animator>();
 		touchingPlayer = false;
 		willChase = false;
+//		if(Random.Range (0,100)<25){
+//			animator.SetBool("gocrouch",true);
+////			((CapsuleCollider)collider).height = ((CapsuleCollider)collider).height/2;
+//			((CapsuleCollider)collider).direction = 2;
+//		}
 	}
 	
 	void FixedUpdate() {

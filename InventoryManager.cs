@@ -42,7 +42,7 @@ public class InventoryManager : MonoBehaviour {
 			else {
 				haveMachineGun = true;
 				numMachineGunAmmo += 48;
-				monoBehaviour.StartCoroutine(ShowMessage("Picked up machine gun"));
+				monoBehaviour.StartCoroutine(ShowMessage("Picked up machine gun, press 2 to switch"));
 			}
 			return true;
 		}
@@ -54,7 +54,7 @@ public class InventoryManager : MonoBehaviour {
 			else {
 				haveLaserGun = true;
 				numLaserGunAmmo += numAmmo;
-				monoBehaviour.StartCoroutine(ShowMessage("Picked up laser gun, press 2 to switch"));
+				monoBehaviour.StartCoroutine(ShowMessage("Picked up laser gun, press 3 to switch"));
 			}
 			return true;
 		}
@@ -63,7 +63,7 @@ public class InventoryManager : MonoBehaviour {
 	}
 
 	public static void DisplayInventory (GUIText inventoryList) {
-		inventoryList.text = "Inventory: \nFlashlights: " + numFlashlights + "\nPistol Ammunition: " + numPistolAmmo;
+		inventoryList.text = "Health: "+Player.GetInstance().health+"/10\n"+"Inventory: \nFlashlights: " + numFlashlights + "\nPistol Ammunition: " + numPistolAmmo;
 		if (haveMachineGun)
 			inventoryList.text += "\nMachine Gun Ammunition: " + numMachineGunAmmo;
 		if (haveLaserGun)
@@ -92,7 +92,8 @@ public class InventoryManager : MonoBehaviour {
 	public static bool weaponUnlocked(int id){
 		switch(id){
 		case 0:return true;
-		case 1:return haveLaserGun;
+		case 1:return haveMachineGun;
+		case 2:return haveLaserGun;
 		default:return false;
 		}
 	}
