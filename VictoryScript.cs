@@ -2,21 +2,10 @@ using UnityEngine;
 using System.Collections;
 
 /**
- * This script should be attached to an empty object
+ * This script checks if the player has reached the end of the maze
+ * and moves the player to the next level.
  * Also an object that has GridScript attached should be attached to this script
- * 
- * This script requires the following behavrios from GridScript
- * public Vector3 Victory; in the variable declarations
- * 
- * a method called
- * 	void CheckGridSize(){
-		if (VictoryScript.gridSize.x != 0 && VictoryScript.gridSize.z != 0){
-			Size= VictoryScript.gridSize;
-		}
-	}
  *
- *This line of code to record where the finish square is at
- *Victory=PathCells[PathCells.Count-1].position;
  */
 public class VictoryScript:MonoBehaviour
 {
@@ -25,11 +14,15 @@ public class VictoryScript:MonoBehaviour
 	private int fade = 0;
 	public AnimationCurve fadeCurve;
 	public GameObject debugMarker;
-
 	private bool isEnd = false;
-	public GridScript grid;//so that a gameObject with GridScript attached can be attached
+	/**a variable so that the victory square can be referenced*/
+	public GridScript grid;
+	/**a variable so that the player can be referenced*/
 	private GameObject playerObj;
 
+	/**
+	 *finds the player and the location of the victory square
+	 */
 	void Start(){
 		debugMarker.transform.position = new Vector3(grid.Victory.x,2f,grid.Victory.z);
 		say ("Level "+(Application.loadedLevel+1));
@@ -65,6 +58,7 @@ public class VictoryScript:MonoBehaviour
 	/**
 	 *Uses the static Vector3 var from GridScript to check the victory condition
 	 *Has leniency of .5f since it is hard for the character to be at the exact center of the victory square
+	 *Also, victory check is ignored if the victory square is at (0,0), which means the maze is not complete yet
 	 */
 	void FixedUpdate(){
 		if(fade>0){
@@ -92,7 +86,6 @@ public class VictoryScript:MonoBehaviour
 			Invoke("Victory",6f);
 			isEnd = true;
 		}
-		//why does everyone hate FixedUpdate?	
 	}
 
 	void Update(){
@@ -101,6 +94,7 @@ public class VictoryScript:MonoBehaviour
 	}
 	/**
 	 *Loads the scene for the next level
+	 *If there aren't more levels to load, a text saying that the player won appears
 	 */
 	void Victory(){
 		int nextLevel = Application.loadedLevel+1;
