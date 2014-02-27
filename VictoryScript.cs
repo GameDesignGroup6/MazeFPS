@@ -26,14 +26,30 @@ public class VictoryScript:MonoBehaviour
 	public AnimationCurve fadeCurve;
 	public GameObject debugMarker;
 
-
+	private bool isEnd = false;
 	public GridScript grid;//so that a gameObject with GridScript attached can be attached
 	private GameObject playerObj;
+
 	void Start(){
 		debugMarker.transform.position = new Vector3(grid.Victory.x,2f,grid.Victory.z);
 		say ("Level "+(Application.loadedLevel+1));
 		playerObj = GameObject.Find ("Player");
-		//DontDestroyOnLoad(this);
+		Invoke ("moveEntrance", 0);
+	}
+
+	void moveEntrance(){
+		grid.ReturnEntrance().rigidbody.AddForce(0,-100,0);
+		StopEntrance ();
+	}
+
+	void StopEntrance(){
+
+		if (grid.ReturnEntrance ().position.y <= 0.05) {
+			grid.ReturnEntrance().position = new Vector3(0,0,0);
+			grid.ReturnEntrance().rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+			return;
+		}
+		Invoke ("StopEntrance", 0f);
 	}
 
 	public void say(string message){
@@ -45,8 +61,7 @@ public class VictoryScript:MonoBehaviour
 		color.a = fadeCurve.Evaluate(percent);
 		text.color = color;
 	}
-	
-	
+
 	/**
 	 *Uses the static Vector3 var from GridScript to check the victory condition
 	 *Has leniency of .5f since it is hard for the character to be at the exact center of the victory square
@@ -67,24 +82,22 @@ public class VictoryScript:MonoBehaviour
 			return;
 		}
 
-
 		var playerPos = playerObj.transform.position;
-		//Debug.Log ("Player is at" + playerPos);
-		if (Mathf.Abs(playerPos.x-grid.Victory.x)<1 && Mathf.Abs(playerPos.z-grid.Victory.z)<1 && (grid.Victory.x!=0 || grid.Victory.z!=0)){
+		if (Mathf.Abs(playerPos.x-grid.Victory.x)<1 && Mathf.Abs(playerPos.z-grid.Victory.z)<1 && (grid.Victory.x!=0 || grid.Victory.z!=0) && !isEnd){
 			Debug.Log("player reached the end");
-			Victory();
-
+			grid.ReturnExit().rigidbody.AddForce(0,-100,0);
+			Transform player = GameObject.Find("Player").transform;
+			player.GetComponent<CharacterMotor>().canControl = false;
+			player.GetComponent<FadeInOut>().isEnd = true;
+			Invoke("Victory",6f);
+			isEnd = true;
 		}
-		//why does everyone hate FixedUpdate?
-//		StartCoroutine(CheckVic());
-		
+		//why does everyone hate FixedUpdate?	
 	}
 
 	void Update(){
 		if(Input.GetKeyDown(KeyCode.F11))
 			debugMarker.renderer.enabled = !debugMarker.renderer.enabled;
-//		if(Input.GetKeyDown (KeyCode.F12))
-//			debugMarker.renderer.enabled = false;
 	}
 	/**
 	 *Loads the scene for the next level
@@ -96,7 +109,5 @@ public class VictoryScript:MonoBehaviour
 			return;
 		}
 		Application.LoadLevel(nextLevel);
-//		gridSize= new Vector3(grid.Size.x+10,0,grid.Size.z+10);
-//		Application.LoadLevel(0);
 	}
 }

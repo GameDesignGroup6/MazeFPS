@@ -10,6 +10,7 @@ public class BorderScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		CreateBorder ();
+		CreateTunnel(new Vector3(0,16,0));
 	}
 
 	void CreateBorder(){
@@ -40,8 +41,25 @@ public class BorderScript : MonoBehaviour {
 			newCell.name = string.Format("({0},0,{1})",4*Size.x, 4*(z-1));
 			newCell.parent = transform;
 			Border[z + 2*((int)Size.x+2) + (int)Size.z+2] = newCell;
-			
 		}
+	}
 
+	public void CreateTunnel(Vector3 position){
+		for(int j = 0; j < 3; j++){
+		for (int i = -1; i < 2; i++) {
+			Transform newCell = (Transform)Instantiate (BorderPrefab, new Vector3 (4 * i + position.x, position.y-4*j, position.z-4), Quaternion.identity);
+				newCell.name = string.Format("({0},{1},{2})",4 * i + position.x, position.y-4*j, position.z-4);
+			newCell.parent = transform;
+		}
+		for (int i = -1; i < 2; i++) {
+			Transform newCell = (Transform)Instantiate (BorderPrefab, new Vector3 (4 * i + position.x, position.y-4*j, position.z+4), Quaternion.identity);
+				newCell.name = string.Format("({0},{1},{2})",4 * i + position.x, position.y-4*j, position.z+4);
+			newCell.parent = transform;
+		}
+			Transform left = (Transform)Instantiate (BorderPrefab, new Vector3 (position.x-4, position.y-4*j, position.z), Quaternion.identity);
+			Transform right = (Transform)Instantiate (BorderPrefab, new Vector3 (position.x+4, position.y-4*j, position.z), Quaternion.identity);
+			left.parent = transform;
+			right.parent = transform;
+		}
 	}
 }

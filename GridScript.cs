@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GridScript : MonoBehaviour {
 	
 	public Transform CellPrefab;
+	public Transform EndCellPrefab;
 	public Vector3 Size;
 	public Transform[,] Grid;
 	public Transform MachineGunPrefab;
@@ -14,6 +15,9 @@ public class GridScript : MonoBehaviour {
 	public Transform FlashLightPrefab;
 	public Vector3 Victory;
 	private int weaponsSpawned = 0;
+	private Transform VictorySquare;
+	private Transform StartSquare;
+	private BorderScript Border;
 	
 	// Use this for initialization
 	void Start () {
@@ -24,7 +28,6 @@ public class GridScript : MonoBehaviour {
 		SetStart();
 		FindNext();
 		FindExit ();
-//		Victory=PathCells[PathCells.Count-1].position;
 		Debug.Log (weaponsSpawned+" Weapons Spawned");
 	}
 	
@@ -125,8 +128,7 @@ public class GridScript : MonoBehaviour {
 		for (int i = 0; i < 10; i++) {
 			AdjSet.Add(new List<Transform>());	
 		}
-		
-		Grid[0, 0].renderer.material.color = Color.green;
+
 		Grid [0, 0].parent = null;
 		AddToSet(Grid[0, 0]);
 	}
@@ -172,8 +174,6 @@ public class GridScript : MonoBehaviour {
 					cell.GetComponentInChildren<TextMesh>().renderer.enabled = false;
 					
 					if (!PathCells.Contains(cell)) {
-						// HINT: Try something here to make the maze 3D
-						//cell.renderer.material.color = Color.black;
 						cell.position = cell.position + 4*(Vector3.up);
 					}else{
 						if(Random.Range (0,100)<=5)CreateWeaponSpawn(cell);
@@ -217,12 +217,36 @@ public class GridScript : MonoBehaviour {
 	void FindExit (){
 		int pos = (int)Random.Range(0, Size.x-1);
 		if (Grid[pos,(int)Size.z-1].position.y == 0f){
-			Grid[pos,(int)Size.z-1].renderer.material.color = Color.red;
+			VictorySquare = Grid[pos,(int)Size.z-1];
+			VictorySquare.collider.enabled = false;
+			VictorySquare.renderer.enabled = false;
+			Transform newCell = (Transform)Instantiate(EndCellPrefab, VictorySquare.position, Quaternion.identity);
+			newCell.rigidbody.isKinematic = false;
+			VictorySquare = newCell;
 			Victory = Grid[pos,(int)Size.z-1].position;
 			Grid[pos,(int)Size.z-1].parent = null;
+			ChangeStart();
+			Border = GameObject.Find("BorderObject").GetComponent<BorderScript>();
+			Border.CreateTunnel(VictorySquare.position);
 			return;
 		}
 		FindExit ();
+	}
+
+	void ChangeStart(){
+		Grid[0,0].collider.enabled = false;
+		Grid[0,0].renderer.enabled = false;
+		Transform newCell = (Transform)Instantiate(EndCellPrefab, new Vector3(0,12,0)+Grid[0,0].position, Quaternion.identity);
+		newCell.rigidbody.isKinematic = false;
+		StartSquare = newCell;
+	}
+
+	public Transform ReturnExit(){
+		return VictorySquare;
+	}
+
+	public Transform ReturnEntrance(){
+		return StartSquare;
 	}
 	
 	void CreateWeaponSpawn(Transform next){
