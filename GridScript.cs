@@ -13,6 +13,7 @@ public class GridScript : MonoBehaviour {
 	public Transform LaserGunPrefab;
 	public Transform MonsterPrefab;
 	public Transform FlashLightPrefab;
+	/**a variable to store the location of the victory square so that other scripts can access it*/
 	public Vector3 Victory;
 	private int weaponsSpawned = 0;
 	private Transform VictorySquare;
