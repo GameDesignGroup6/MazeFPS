@@ -2,6 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/**
+ * @author Austin Hacker
+ * A class to generate a 3d maze using Prim's algorithm
+ * Maze algorithm inspired by code by Austin Takechi
+*/
+
 public class GridScript : MonoBehaviour {
 	
 	public Transform CellPrefab;
@@ -13,7 +19,6 @@ public class GridScript : MonoBehaviour {
 	public Transform LaserGunPrefab;
 	public Transform MonsterPrefab;
 	public Transform FlashLightPrefab;
-	/**a variable to store the location of the victory square so that other scripts can access it*/
 	public Vector3 Victory;
 	private int weaponsSpawned = 0;
 	private Transform VictorySquare;
@@ -173,7 +178,7 @@ public class GridScript : MonoBehaviour {
 				foreach (Transform cell in Grid) {
 					// Removes displayed weight
 					cell.GetComponentInChildren<TextMesh>().renderer.enabled = false;
-					
+
 					if (!PathCells.Contains(cell)) {
 						cell.position = cell.position + 4*(Vector3.up);
 					}else{
@@ -205,7 +210,7 @@ public class GridScript : MonoBehaviour {
 			isDeadEnd -= 1;
 		}
 		// generate special squares
-		if(isDeadEnd == 0) {
+		if(isDeadEnd == 0 && next.position != new Vector3(0,0,0)) {
 			int chance = Random.Range(0,10);
 			if (chance < 4) {CreateMonsterSpawn(next);}
 			if (chance >= 4) { 
@@ -214,26 +219,41 @@ public class GridScript : MonoBehaviour {
 		}
 		
 	}
-	
+	/*
+	 * A method to generate the end of the maze
+	 * Since the maze does not have only one path to the exit, the end
+	 * that Austin Takechi generated could be too close to the beginning
+	 * thus, this method is necessary.
+	 * The end of the maze is always located against the back wall
+	 */
 	void FindExit (){
 		int pos = (int)Random.Range(0, Size.x-1);
 		if (Grid[pos,(int)Size.z-1].position.y == 0f){
 			VictorySquare = Grid[pos,(int)Size.z-1];
 			VictorySquare.collider.enabled = false;
 			VictorySquare.renderer.enabled = false;
+			//replace the exit with an elevator
 			Transform newCell = (Transform)Instantiate(EndCellPrefab, VictorySquare.position, Quaternion.identity);
 			newCell.rigidbody.isKinematic = false;
 			VictorySquare = newCell;
 			Victory = Grid[pos,(int)Size.z-1].position;
 			Grid[pos,(int)Size.z-1].parent = null;
+
+			//replace the start of the maze with an elevator too
+			//this is done here because the maze generation algorithm must finish first
 			ChangeStart();
+
+			//create a tunnel around the exit so when the elevator moves down, there are walls constantly surrounding the player
 			Border = GameObject.Find("BorderObject").GetComponent<BorderScript>();
 			Border.CreateTunnel(VictorySquare.position);
 			return;
 		}
+		//recursive call in case the square we find is a wall
 		FindExit ();
 	}
-
+	/*
+	 * A method to replace the initial square with an elevator
+	 */
 	void ChangeStart(){
 		Grid[0,0].collider.enabled = false;
 		Grid[0,0].renderer.enabled = false;
@@ -242,14 +262,22 @@ public class GridScript : MonoBehaviour {
 		StartSquare = newCell;
 	}
 
+	//A method so other scripts can access the exit elevator
 	public Transform ReturnExit(){
 		return VictorySquare;
 	}
 
+	//A method so other scripts can access the initial elevator
 	public Transform ReturnEntrance(){
 		return StartSquare;
 	}
-	
+
+	/*
+	 * A method to spawn weapons on the map.
+	 * Different weapons have different spawn rates.
+	 * code for a machinegun option exists but is currently commented
+	 * out due to issues with machinegun animations
+	 */
 	void CreateWeaponSpawn(Transform next){
 		Transform newItem;
 		weaponsSpawned++;
@@ -268,10 +296,12 @@ public class GridScript : MonoBehaviour {
 			newItem.name = "LaserGun";
 		}
 	}
+	//A helper method for item spawns
 	private bool isBetween(int min, int val, int max){
 		return (min<val&&max>val);
 	}
-	
+
+	//A method to spawn a monster on a given square
 	void CreateMonsterSpawn(Transform next){
 		Transform newMonster;
 		newMonster = (Transform)Instantiate (MonsterPrefab, new Vector3 (next.localPosition.x, 3.05f, next.localPosition.z), Quaternion.identity);
